@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { UploadCloud, Loader2, FileImage, ShieldCheck, FlaskConical, X } from "lucide-react";
+import { UploadCloud, FileImage, ShieldCheck, FlaskConical, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface UploadZoneProps {
@@ -14,7 +14,6 @@ export default function UploadZone({ onFileSelected, isLoading }: UploadZoneProp
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  // Cleanup object URL
   useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -40,11 +39,10 @@ export default function UploadZone({ onFileSelected, isLoading }: UploadZoneProp
   });
 
   const handleSampleTest = async () => {
-    // Fetch sample image from /public/sample-nin.jpg
     try {
-      const res = await fetch("/sample-nin.jpg");
+      const res = await fetch("/test-nin-two.png");
       const blob = await res.blob();
-      const file = new File([blob], "sample-nin.jpg", { type: "image/jpeg" });
+      const file = new File([blob], "test-nin-two.png", { type: "image/png" });
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
       onFileSelected(file);
@@ -94,10 +92,17 @@ export default function UploadZone({ onFileSelected, isLoading }: UploadZoneProp
               className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${previewUrl})` }}
             >
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-2 text-white">
-                  <Loader2 className="w-10 h-10 animate-spin" />
-                  <span className="text-sm font-medium">Processing...</span>
+              {/* AI Scanning Overlay */}
+              <div className="absolute inset-0 bg-black/30" />
+              
+              {/* Scanning line that moves vertically */}
+              <div className="absolute left-0 right-0 h-8 bg-gradient-to-b from-transparent via-emerald-400/40 to-transparent animate-scan" />
+              
+              {/* AI Label */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <div className="flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-sm rounded-full">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-xs font-medium text-white">AI Analyzing...</span>
                 </div>
               </div>
             </motion.div>
@@ -107,15 +112,10 @@ export default function UploadZone({ onFileSelected, isLoading }: UploadZoneProp
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center gap-3 p-6 text-center">
           {isLoading ? (
-            <>
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-                className="w-12 h-12 rounded-full border-4 border-gray-200 border-t-emerald-500"
-              />
-              <p className="text-gray-800 font-medium text-sm">Processing document...</p>
-              <p className="text-gray-400 text-xs">This may take a few seconds</p>
-            </>
+            /* Minimal AI processing - just the scanning effect and label */
+            <div className="flex flex-col items-center gap-2 opacity-0">
+              <div className="w-10 h-10" /> {/* Invisible spacer to keep height stable */}
+            </div>
           ) : previewUrl ? (
             <>
               <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
@@ -181,6 +181,20 @@ export default function UploadZone({ onFileSelected, isLoading }: UploadZoneProp
           Try with a sample NIN Slip
         </button>
       )}
+
+      <style jsx>{`
+        @keyframes scan {
+          0% { top: -10%; }
+          100% { top: 110%; }
+        }
+        .animate-scan {
+          animation: scan 2s ease-in-out infinite;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+        }
+      `}</style>
     </div>
   );
 }

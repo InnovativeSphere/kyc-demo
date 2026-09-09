@@ -1,6 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { ScanFace, FileSearch, Braces, ShieldAlert, CheckCircle2, Loader2 } from "lucide-react";
+import { Loader2, ScanFace, FileSearch, Braces, ShieldAlert, CheckCircle2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const steps = [
   { label: "Initializing", icon: Loader2 },
@@ -11,11 +12,19 @@ const steps = [
 ];
 
 export default function ProcessPipeline({ progress }: { progress: number }) {
-  // Determine active step based on progress ranges
   const activeStep = Math.min(
     Math.floor(progress / (100 / steps.length)),
     steps.length - 1
   );
+
+  // Add a pulse every 3 seconds
+  const [pulseKey, setPulseKey] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPulseKey((prev) => prev + 1);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <motion.div
@@ -23,7 +32,7 @@ export default function ProcessPipeline({ progress }: { progress: number }) {
       animate={{ opacity: 1, y: 0 }}
       className="mt-4 w-full p-4 bg-white/95 border border-[#E0E0E0] rounded-2xl shadow-sm overflow-hidden relative"
     >
-      {/* Subtle background grid */}
+      {/* Background grid */}
       <div
         className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{
@@ -55,22 +64,23 @@ export default function ProcessPipeline({ progress }: { progress: number }) {
           </AnimatePresence>
         </div>
 
-        {/* Percentage */}
         <span className="text-xs font-mono text-[#9A9A9A] tabular-nums">{progress}%</span>
       </div>
 
-      {/* Progress bar */}
+      {/* Progress bar with pulsing dot */}
       <div className="relative h-1.5 w-full bg-[#F0F0F0] rounded-full overflow-hidden mb-5">
         <motion.div
           className="absolute left-0 top-0 h-full bg-gradient-to-r from-[#E5E5E5] via-emerald-500 to-[#E5E5E5] rounded-full"
           animate={{ width: `${progress}%` }}
           transition={{ ease: "easeOut", duration: 0.5 }}
         />
-        {/* Shimmer */}
+        {/* Traveling pulse dot (re-triggers every 3s) */}
         <motion.div
-          className="absolute top-0 h-full w-10 bg-white/40 blur-sm"
-          animate={{ x: ["-100%", "400%"] }}
-          transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+          key={pulseKey}
+          initial={{ left: "0%" }}
+          animate={{ left: "100%" }}
+          transition={{ duration: 2.5, ease: "easeInOut" }}
+          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-emerald-500/50 blur-[2px]"
         />
       </div>
 

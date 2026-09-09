@@ -44,13 +44,23 @@ export default function HowItWorks() {
           </div>
         ))}
       </div>
-      {/* Connecting gradient line */}
-      <div className="relative mt-6 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+      
+      {/* Thinner connecting line with traveling dot */}
+      <div className="relative mt-6 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+        {/* Progress fill line (slides in once) */}
         <motion.div
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
           transition={{ delay: 0.8, duration: 1.5, ease: "easeInOut" }}
           className="absolute left-0 top-0 h-full bg-gradient-to-r from-[#1A1A1A] via-emerald-500 to-[#1A1A1A]"
+        />
+        {/* Traveling dot - uses left animation to cross the full width */}
+        <motion.div
+          initial={{ left: "0%" }}
+          animate={{ left: "100%" }}
+          transition={{ repeat: Infinity, duration: 2.5, ease: "linear" }}
+          className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-emerald-500 shadow-md shadow-emerald-500/50"
+          style={{ marginLeft: "-4px" }} // offset to center dot at edges
         />
       </div>
     </div>
