@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background-color: #FAFAFA;
+  color: #1A1A1A;
+}
+
+/* Aurora Background Animation */
+@keyframes aurora {
+  0% { transform: translate(0, 0); opacity: 0.5; }
+  50% { transform: translate(20%, 10%); opacity: 0.8; }
+  100% { transform: translate(-10%, -5%); opacity: 0.5; }
+}
+
+.aurora-bg {
+  background: radial-gradient(circle at top left, #1F1B4D 0%, #050816 60%);
+  position: relative;
+  overflow: hidden;
+}
+
+.aurora-blob {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  filter: blur(100px);
+  border-radius: 50%;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.aurora-blob-1 {
+  background: #00D9FF;
+  top: -50px;
+  left: -100px;
+  animation: aurora 15s infinite alternate;
+}
+
+.aurora-blob-2 {
+  background: #A855F7;
+  bottom: -50px;
+  right: -100px;
+  animation: aurora 20s infinite alternate-reverse;
+}
