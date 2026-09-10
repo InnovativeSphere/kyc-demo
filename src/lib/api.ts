@@ -1,7 +1,7 @@
 // src/lib/api.ts
 
-// const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://nigerian-id-verification-production.up.railway.app";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+// const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://nigerian-id-verification-production.up.railway.app";
 
 export async function processDocument(file: File) {
   const formData = new FormData();
