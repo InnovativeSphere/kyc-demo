@@ -87,7 +87,7 @@ export default function DemoPlayer() {
       <div className="relative bg-black aspect-video">
         <video
           ref={videoRef}
-          src="/sample-video.mp4"
+          src="/sample-video-compressed.mp4"
           className="w-full h-full object-contain"
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
